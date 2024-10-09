@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Boda de Natalia y José</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f8f9fa;
+            color: #343a40;
+        }
+        header {
+            background-color: #6f42c1;
+            color: white;
+            text-align: center;
+            padding: 20px 0;
+        }
+        h1, h2 {
+            margin: 0;
+        }
+        .container {
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: white;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+        }
+        .section {
+            margin-bottom: 20px;
+        }
+        .section h3 {
+            border-bottom: 2px solid #6f42c1;
+            padding-bottom: 5px;
+        }
+        .confirmation {
+            background-color: #e9ecef;
+            padding: 10px;
+            border-radius: 5px;
+        }
+        .map {
+            margin-top: 20px;
+            text-align: center;
+        }
+        footer {
+            text-align: center;
+            padding: 10px;
+            background-color: #6f42c1;
+            color: white;
+            position: relative;
+            bottom: 0;
+            width: 100%;
+        }
+        input, select {
+            padding: 10px;
+            margin: 10px 0;
+            width: calc(100% - 22px);
+            border: 1px solid #ced4da;
+            border-radius: 5px;
+        }
+        input[type="submit"] {
+            background-color: #6f42c1;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        input[type="submit"]:hover {
+            background-color: #5a32a3;
+        }
+        .acompanhantes {
+            margin-top: 10px;
+        }
+        .acompanhante {
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>Natalia y José</h1>
+    <h2>¡Nos Casamos el 14 de diciembre de 2024!</h2>
+</header>
+
+<div class="container">
+
+    <div class="section">
+        <h3>Nuestra Historia</h3>
+        <img src="JOSE.jpg" alt="Nuestra foto juntos" style="max-width: 100%; height: auto;">
+        <p>Después de varios años, POR FIN NOS CASAMOS y por supuesto, estamos deseando que vengáis!</p>
+    </div>
+
+    <div class="section">
+        <h3>Información del Evento</h3>
+        <p><strong>Fecha:</strong> 14 de diciembre de 2024</p>
+        <p><strong>Hora:</strong> 12:00 PM en la Iglesia de las Viñas de Jerez de la Frontera</p>
+        <p><strong>Recepción:</strong> 14:00 PM en la Bodega Sánchez Romate, Jerez de la Frontera</p>
+    </div>
+
+    <div class="section">
+        <h3>Número de Participantes</h3>
+        <p>Por favor, indica cuántos asistirán:</p>
+        <input type="number" id="num_participantes" min="1" placeholder="Número de Participantes" required oninput="updateAcompañantes()">
+        <div id="acompanhantes" class="acompanhantes"></div>
+    </div>
+
+    <div class="section confirmation">
+        <h3>Confirmación de Asistencia</h3>
+        <p>Por favor, confirma tu asistencia llenando el siguiente formulario:</p>
+        <form action="enviar_confirmacion.php" method="POST">
+            <input type="text" name="nombre" placeholder="Tu Nombre" required>
+            <input type="email" name="email" placeholder="Tu Correo Electrónico" required>
+            <input type="number" id="num_participantes_hidden" name="num_participantes" min="1" required style="display: none;">
+            <label for="asistencia">¿Vas a asistir?</label>
+            <select name="asistencia" id="asistencia" required>
+                <option value="si">Sí</option>
+                <option value="no">No</option>
+            </select>
+            <div id="nombres_acompanhantes"></div>
+            <input type="submit" value="Enviar Confirmación">
+        </form>
+    </div>
+
+    <div class="section map">
+        <h3>Ubicación</h3>
+        <p>Encuentra la ubicación del evento en el mapa:</p>
+        <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d30894.199639353434!2d-6.135817252098855!3d36.68373086609163!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0xd71cc813e9f6e9d%3A0x3d30c0a80fd21e57!2sIglesia%20de%20las%20Vi%C3%B1as!5e0!3m2!1ses!2ses!4v1631213832302!5m2!1ses!2ses" width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy"></iframe>
+    </div>
+
+</div>
+
+<footer>
+    <p>¡Nos vemos pronto! Cualquier duda, contáctanos.</p>
+</footer>
+
+<script>
+    function updateAcompañantes() {
+        const numParticipantes = document.getElementById('num_participantes').value;
+        const numParticipantesHidden = document.getElementById('num_participantes_hidden');
+        numParticipantesHidden.value = numParticipantes;
+
+        const nombresAcompañantesDiv = document.getElementById('nombres_acompanhantes');
+        nombresAcompañantesDiv.innerHTML = ''; // Limpiar campos existentes
+
+        for (let i = 1; i < numParticipantes; i++) {
+            const input = document.createElement('input');
+            input.type = 'text';
+            input.name = `acompanante_${i}`;
+            input.placeholder = `Nombre del Acompañante ${i}`;
+            input.className = 'acompanhante';
+            nombresAcompañantesDiv.appendChild(input);
+        }
+    }
+</script>
+
+</body>
+</html>
+
+<?php
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    // Obtener datos del formulario
+    $nombre = $_POST['nombre'];
+    $email = $_POST['email'];
+    $num_participantes = $_POST['num_participantes'];
+    $asistencia = $_POST['asistencia'];
+
+    // Crear mensaje inicial
+    $mensaje = "Nombre: $nombre\n";
+    $mensaje .= "Correo Electrónico: $email\n";
+    $mensaje .= "Número de Participantes: $num_participantes\n";
+    $mensaje .= "Asistirá: $asistencia\n";
+    
+    // Obtener nombres de acompañantes
+    for ($i = 1; $i < $num_participantes; $i++) {
+        if (isset($_POST["acompanante_$i"])) {
+            $acompanante = $_POST["acompanante_$i"];
+            $mensaje .= "Acompañante $i: $acompanante\n";
+        }
+    }
+
+    // Configuración del correo
+    $destinatario = "martaperezolea@gmail.com"; // Cambia esto a tu dirección de correo
+    $asunto = "Confirmación de Asistencia: $nombre";
+
+    // Enviar correo
+    if (mail($destinatario, $asunto, $mensaje)) {
+        echo "Gracias por confirmar tu asistencia. ¡Nos vemos pronto!";
+    } else {
+        echo "Error al enviar la confirmación. Por favor, intenta de nuevo.";
+    }
+} else {
+    echo "Método de solicitud no válido.";
+}
+?>
